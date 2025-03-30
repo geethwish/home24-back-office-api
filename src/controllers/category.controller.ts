@@ -30,13 +30,14 @@ export const getCategoryById = async (
 };
 
 export const createCategory = async (req: Request, res: Response) => {
-  const { name, description } = req.body;
+  const { name, description, parent_id } = req.body;
 
   try {
     const newCategory = new Category({
       id: uuidv4(),
       name,
       description,
+      parent_id: parent_id || null,
     });
 
     console.log(newCategory);
@@ -86,6 +87,37 @@ export const deleteCategory = async (
       return res.status(404).json({ msg: "Category not found" });
     }
     res.status(200).json({ msg: "Category deleted" });
+  } catch (err: any) {
+    console.error(err.message);
+    res.status(500).json({ message: `Server Error: ${err.message}` });
+  }
+};
+
+// This function retrieves all categories and builds a hierarchical structure based on parent to child relationships.
+export const getCategoriesByParent = async (req: Request, res: Response) => {
+  try {
+    const categories = await Category.find();
+
+    const buildHierarchy = (
+      parentId: string | null
+    ): Array<{
+      id: string;
+      name: string;
+      description: string;
+      parent_id: string | null;
+      children: any[];
+    }> => {
+      return categories
+        .filter((category: any) => category.parent_id === parentId)
+        .map((category: any) => ({
+          ...category.toObject(),
+          children: buildHierarchy(category.id),
+        }));
+    };
+
+    const categorized = buildHierarchy(null);
+
+    res.status(200).json(categorized);
   } catch (err: any) {
     console.error(err.message);
     res.status(500).json({ message: `Server Error: ${err.message}` });
