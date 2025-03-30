@@ -1,10 +1,11 @@
-// backend/src/models/user.model.ts
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface UserDocument extends Document {
+  name?: string;
   email: string;
   passwordHash: string;
+  isValidPassword(password: string): Promise<boolean>;
 }
 
 const UserSchema: Schema = new Schema({
@@ -12,9 +13,12 @@ const UserSchema: Schema = new Schema({
   passwordHash: { type: String, required: true },
 });
 
+// validate the password
 UserSchema.methods.isValidPassword = async function (
   password: string
 ): Promise<boolean> {
+  console.log(password);
+
   return await bcrypt.compare(password, this.passwordHash);
 };
 
