@@ -4,12 +4,12 @@ import mongoose, { Schema, Document } from "mongoose";
 interface AttributeValue {
   code: string;
   value: any;
+  type: "number" | "text" | "url" | "tags" | "boolean";
 }
 
 export interface ProductDocument extends Document {
-  id: number;
   name: string;
-  category_id: number;
+  category_id: string;
   attributes: AttributeValue[];
   imageUrl?: string;
   description: string;
@@ -18,17 +18,21 @@ export interface ProductDocument extends Document {
 }
 
 const ProductSchema: Schema = new Schema({
-  id: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
-  category_id: { type: Number, required: true },
+  category_id: { type: String, required: true },
   attributes: [
     {
       code: { type: String, required: true },
       value: { type: Schema.Types.Mixed },
+      type: {
+        type: String,
+        enum: ["number", "text", "url", "tags", "boolean"],
+        required: true,
+      },
     },
   ],
-  price: { type: String, required: true },
-  stock: { type: String, required: true },
+  price: { type: Number, required: true },
+  stock: { type: Number, required: false },
 });
 
 export default mongoose.model<ProductDocument>("Product", ProductSchema);

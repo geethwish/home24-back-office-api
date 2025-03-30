@@ -17,8 +17,6 @@ const UserSchema: Schema = new Schema({
 UserSchema.methods.isValidPassword = async function (
   password: string
 ): Promise<boolean> {
-  console.log(password);
-
   return await bcrypt.compare(password, this.passwordHash);
 };
 

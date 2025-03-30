@@ -9,13 +9,9 @@ export const login = async (
 ): Promise<Response | any> => {
   const { email, password } = req.body;
 
-  console.log(req.body);
-
   try {
     // Check if the user exists
     const user = await User.findOne({ email });
-
-    console.log(user);
 
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -47,7 +43,7 @@ export const login = async (
     res.status(200).json({ token });
   } catch (err: any) {
     console.error(err.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: `Server Error : ${err.message}` });
   }
 };
 
@@ -57,18 +53,19 @@ export const signup = async (
 ): Promise<Response | any> => {
   const { name, email, password } = req.body;
 
-  console.log(req.body);
-
   try {
+    // Check if the user already exists
     const existingUser = await User.findOne({ email });
+
+    // If user exists, return an error
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     const saltRounds = 10; // Define the number of salt rounds explicitly
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    console.log(hashedPassword);
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = new User({
       name,
@@ -76,8 +73,7 @@ export const signup = async (
       passwordHash: hashedPassword,
     });
 
-    console.log(newUser);
-
+    // Save the new user on the database
     await newUser.save();
 
     const payload = {
@@ -88,6 +84,7 @@ export const signup = async (
       },
     };
 
+    // Create a JWT token
     const token = jwt.sign(
       payload,
       process.env.JWT_SECRET || "default-secret",
@@ -97,6 +94,6 @@ export const signup = async (
     res.status(201).json({ token });
   } catch (err: any) {
     console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: `Server Error : ${err.message}` });
   }
 };
