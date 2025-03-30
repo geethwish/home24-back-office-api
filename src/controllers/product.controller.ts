@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Product from "../models/product.model";
+import { v4 as uuidv4 } from "uuid";
 
 export const getProductsByCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
@@ -51,7 +52,7 @@ export const getProductById = async (
   console.log(productId);
 
   try {
-    const product = await Product.findOne({ _id: productId });
+    const product = await Product.findOne({ id: productId });
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -67,6 +68,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
   try {
     const newProduct = new Product({
+      id: uuidv4(),
       name,
       category_id,
       price,
@@ -122,7 +124,7 @@ export const deleteProductById = async (req: Request, res: Response) => {
   const { productId } = req.params;
 
   try {
-    const product = await Product.findOneAndDelete({ _id: productId });
+    const product = await Product.findOneAndDelete({ id: productId });
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -138,7 +140,7 @@ export const updateProductById = async (req: Request, res: Response) => {
 
   try {
     const updatedProduct = await Product.findOneAndUpdate(
-      { _id: productId },
+      { id: productId },
       updateData,
       { new: true }
     );

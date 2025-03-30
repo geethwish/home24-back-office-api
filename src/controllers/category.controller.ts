@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Category from "../models/category.model";
+import { v4 as uuidv4 } from "uuid";
 
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
@@ -17,7 +18,7 @@ export const getCategoryById = async (
 ): Promise<Response | any> => {
   const { id } = req.params;
   try {
-    const category = await Category.findOne({ _id: id });
+    const category = await Category.findOne({ id: id });
     if (!category) {
       return res.status(404).json({ msg: "Category not found" });
     }
@@ -33,9 +34,12 @@ export const createCategory = async (req: Request, res: Response) => {
 
   try {
     const newCategory = new Category({
+      id: uuidv4(),
       name,
       description,
     });
+
+    console.log(newCategory);
 
     await newCategory.save();
     res.status(201).json(newCategory);
@@ -54,7 +58,7 @@ export const updateCategory = async (
 
   try {
     const updatedCategory = await Category.findOneAndUpdate(
-      { _id: id },
+      { id: id },
       { name, description },
       { new: true }
     );
@@ -76,7 +80,7 @@ export const deleteCategory = async (
 
   try {
     const deletedCategory = await Category.findOneAndDelete({
-      _id: id,
+      id: id,
     });
     if (!deletedCategory) {
       return res.status(404).json({ msg: "Category not found" });
