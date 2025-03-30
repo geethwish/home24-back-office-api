@@ -3,7 +3,7 @@ import Category from "../models/category.model";
 
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
-    const categories = await Category.find().sort({ id: 1 });
+    const categories = await Category.find();
     res.status(200).json(categories);
   } catch (err: any) {
     console.error(err.message);
@@ -45,7 +45,10 @@ export const createCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCategory = async (req: Request, res: Response) => {
+export const updateCategory = async (
+  req: Request,
+  res: Response
+): Promise<Response | any> => {
   const { id } = req.params;
   const { name, description } = req.body;
 
@@ -65,7 +68,10 @@ export const updateCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCategory = async (req: Request, res: Response) => {
+export const deleteCategory = async (
+  req: Request,
+  res: Response
+): Promise<Response | any> => {
   const { id } = req.params;
 
   try {
