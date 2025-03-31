@@ -3,6 +3,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.route";
 import categoryRoutes from "./routes/category.route";
 import productRoutes from "./routes/product.route";
+import supportRoutes from "./routes/support.route";
 import dotenv from "dotenv";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/support", supportRoutes);
 
 // Swagger Configuration
 const swaggerOptions = {
