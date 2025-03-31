@@ -4,6 +4,7 @@ import router from "../src/routes/product.route";
 import auth from "../src/middleware/auth.middleware";
 import {
   createProduct,
+  deleteProductById,
   getAllProducts,
   getProductById,
   getProductsByCategory,
@@ -19,6 +20,12 @@ jest.mock("../src/controllers/product.controller", () => ({
   getProductById: jest.fn((req, res) => res.status(200).send("Product by ID")),
   getProductsByCategory: jest.fn((req, res) =>
     res.status(200).send("Products by category")
+  ),
+  updateProductById: jest.fn((req, res) =>
+    res.status(200).send("Product updated")
+  ),
+  deleteProductById: jest.fn((req, res) =>
+    res.status(200).send("Product deleted")
   ),
 }));
 
@@ -56,7 +63,7 @@ describe("Product Routes", () => {
   it("DELETE /products/:productId - should call getProductById", async () => {
     const response = await request(app).delete("/products/123");
     expect(response.status).toBe(200);
-    expect(getProductById).toHaveBeenCalled();
+    expect(deleteProductById).toHaveBeenCalled();
   });
 
   it("GET /products/:productId - should call getProductById", async () => {

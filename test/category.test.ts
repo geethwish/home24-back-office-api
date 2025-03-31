@@ -52,7 +52,7 @@ describe("Category Controller", () => {
     const response = await request(app).get("/categories/1");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ id: 1, name: "Category 1" });
-    expect(Category.findOne).toHaveBeenCalledWith({ _id: "1" });
+    expect(Category.findOne).toHaveBeenCalledWith({ id: "1" });
   });
 
   it("GET /categories/:id - should return 404 if category not found", async () => {
@@ -95,7 +95,7 @@ describe("Category Controller", () => {
       description: "Updated Description",
     });
     expect(Category.findOneAndUpdate).toHaveBeenCalledWith(
-      { _id: "1" },
+      { id: "1" },
       { name: "Updated Category", description: "Updated Description" },
       { new: true }
     );
@@ -120,7 +120,7 @@ describe("Category Controller", () => {
     const response = await request(app).delete("/categories/1");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ msg: "Category deleted" });
-    expect(Category.findOneAndDelete).toHaveBeenCalledWith({ _id: "1" });
+    expect(Category.findOneAndDelete).toHaveBeenCalledWith({ id: "1" });
   });
 
   it("DELETE /categories/:id - should return 404 if category not found", async () => {
