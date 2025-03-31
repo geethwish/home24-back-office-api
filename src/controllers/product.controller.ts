@@ -64,7 +64,8 @@ export const getProductById = async (
 };
 
 export const createProduct = async (req: Request, res: Response) => {
-  const { name, category_id, price, attributes } = req.body;
+  const { name, category_id, price, attributes, imageUrl, description, stock } =
+    req.body;
 
   try {
     const newProduct = new Product({
@@ -73,6 +74,9 @@ export const createProduct = async (req: Request, res: Response) => {
       category_id,
       price,
       attributes,
+      imageUrl,
+      description,
+      stock,
     });
 
     const savedProduct = await newProduct.save();
@@ -120,7 +124,10 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteProductById = async (req: Request, res: Response) => {
+export const deleteProductById = async (
+  req: Request,
+  res: Response
+): Promise<Response | any> => {
   const { productId } = req.params;
 
   try {
@@ -134,7 +141,10 @@ export const deleteProductById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateProductById = async (req: Request, res: Response) => {
+export const updateProductById = async (
+  req: Request,
+  res: Response
+): Promise<Response | any> => {
   const { productId } = req.params;
   const updateData = req.body;
 
