@@ -17,22 +17,25 @@ export interface ProductDocument extends Document {
   stock: number;
 }
 
+const AttributeSchema: Schema = new Schema(
+  {
+    code: { type: String, required: true },
+    value: { type: Schema.Types.Mixed },
+    type: {
+      type: String,
+      enum: ["number", "text", "url", "tags", "boolean"],
+      required: true,
+    },
+  },
+  { _id: false } // Prevents the _id field from being added
+);
+
 const ProductSchema: Schema = new Schema(
   {
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     category_id: { type: String, required: true },
-    attributes: [
-      {
-        code: { type: String, required: true },
-        value: { type: Schema.Types.Mixed },
-        type: {
-          type: String,
-          enum: ["number", "text", "url", "tags", "boolean"],
-          required: true,
-        },
-      },
-    ],
+    attributes: [AttributeSchema], // Use the AttributeSchema here
     price: { type: Number, required: true },
     stock: { type: Number, required: false },
     imageUrl: { type: String, required: false },

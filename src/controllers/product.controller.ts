@@ -68,6 +68,15 @@ export const createProduct = async (req: Request, res: Response) => {
     req.body;
 
   try {
+    // Check if attributes.code contains unique values
+    const codes = attributes.map((attr: { code: string }) => attr.code);
+    const uniqueCodes = new Set(codes);
+    if (codes.length !== uniqueCodes.size) {
+      return res
+        .status(400)
+        .json({ message: "Attributes name should not be duplicate" });
+    }
+
     const newProduct = new Product({
       id: uuidv4(),
       name,
@@ -149,6 +158,17 @@ export const updateProductById = async (
   const updateData = req.body;
 
   try {
+    if (updateData.attributes) {
+      const codes = updateData.attributes.map(
+        (attr: { code: string }) => attr.code
+      );
+      const uniqueCodes = new Set(codes);
+      if (codes.length !== uniqueCodes.size) {
+        return res
+          .status(400)
+          .json({ message: "Attributes code should not be duplicate" });
+      }
+    }
     const updatedProduct = await Product.findOneAndUpdate(
       { id: productId },
       updateData,
