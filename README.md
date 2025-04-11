@@ -97,7 +97,7 @@ Ensure you have the following installed:
 Start the development server:
 
 ```bash
-npm start
+npm run dev
 ```
 
 The API will be available at `http://localhost:3001`.
