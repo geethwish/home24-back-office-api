@@ -91,6 +91,7 @@ Ensure you have the following installed:
    JWT_SECRET=your_jwt_secret
    PORT=3001
    ```
+   Env variables will provide directly to you email
 
 ### Running the Application
 
